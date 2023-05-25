@@ -37,18 +37,18 @@ setClicks(newClicks);
 setAll(newClicks.bad + clicks.good + clicks.neutral);
   };
 
-  const average = (clicks.good + clicks.neutral + clicks.bad) / 3;
+  const average = Math.ceil((clicks.good + clicks.neutral + clicks.bad) / 3);
 
-  const positive = clicks.good ? `${(clicks.good / all) * 100}  %` : "0 %";
+  const positive = clicks.good ? `${Math.ceil((clicks.good / all) * 100)}  %` : "0 %";
 
   return (
-    <div>
+    <>
       <h1>give feedback</h1>
       <Button text={"good"} handleClick={handleGoodClick} />
       <Button text={"neutral"} handleClick={handleNeutralClick} />
       <Button text={"bad"} handleClick={handleBadClick} />
       <Statistics good={clicks.good} neutral={clicks.neutral} bad={clicks.bad} all={all} average={average} positive={positive}/>
-    </div>
+    </>
   );
 };
 
