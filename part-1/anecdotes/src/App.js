@@ -11,38 +11,54 @@ const App = () => {
     "Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.",
     "The only way to go fast, is to go well.",
   ];
-  const [points, setPoints] = useState({
-    0: 0,
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 0,
-    5: 0,
-    6: 0,
-    7: 0,
-  });
+
+  const [points, setPoints] = useState(Array.from(anecdotes, () => 0))
 
   const [selected, setSelected] = useState(0);
 
-  const handleAnecdote = () => {
+  const handleNextAnecdote = () => {
     const randomAnecdote = Math.floor(Math.random() * anecdotes.length);
     setSelected(randomAnecdote);
   };
 
-  const handleVote = () => {
-    const votedAnecdote = anecdotes[selected];
-    const anecdoteIndex = anecdotes.indexOf(votedAnecdote);
-    setPoints((prevPoints) => ({
-      ...prevPoints,
-      [anecdoteIndex]: prevPoints[anecdoteIndex] + 1,
-    }));
+  const handlePressVote = () => {
+    const currentAnecdotePoints = points[selected];
+
+    setPoints((prev) => {
+      const prevCopy = [...prev]
+      prevCopy.splice(selected, 1, currentAnecdotePoints + 1);
+      return prevCopy
+    })
   };
+
+  const mostVotedAnectode = points.reduce((acc, point, index) => {
+    if(acc.points === undefined) {
+      acc.points = point
+      acc.anecdote = anecdotes[index]
+      return acc
+    }
+
+    if(point > acc.points) {
+      acc.points = point
+      acc.anecdote = anecdotes[index];
+      return acc
+    }
+
+    return acc
+  }, {anecdote: undefined, points: undefined})
+
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
       <p>{`Has ${points[selected]} votes`}</p>
-      <button onClick={handleVote}>Vote</button>
-      <button onClick={handleAnecdote}>Next anecdote</button>
+      <button onClick={handlePressVote}>Vote</button>
+      <button onClick={handleNextAnecdote}>Next anecdote</button>
+      <h1>Anecdote with most votes</h1>
+      <div>
+        {mostVotedAnectode.anecdote}
+        <p>{`Has ${mostVotedAnectode.points} votes`}</p>
+      </div>
     </div>
   );
 };
