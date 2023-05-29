@@ -38,7 +38,7 @@ const App = () => {
       return acc
     }
 
-    if(point > acc.points) {
+    if(acc.points < point ) {
       acc.points = point
       acc.anecdote = anecdotes[index];
       return acc
