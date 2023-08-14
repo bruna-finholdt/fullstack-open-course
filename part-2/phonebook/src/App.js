@@ -16,9 +16,17 @@ const App = () => {
       id: persons.length + 1,
     };
 
-    setPersons(persons.concat(personObject));
-    // setPersons([...persons, personObject]);
-    setNewName("");
+    const existingName = persons.some(
+      (person) => person.name === personObject.name
+    );
+
+    if (existingName) {
+      alert(`${newName} is already added to phonebook`);
+    } else {
+      setPersons(persons.concat(personObject));
+      // setPersons([...persons, personObject]);
+      setNewName("");
+    }
   };
 
   return (
