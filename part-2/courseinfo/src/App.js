@@ -56,8 +56,3 @@ const App = () => {
 };
 
 export default App;
-
-//2.5: separate module
-//Declare the Course component as a separate module, which is imported by the App component. You can include all subcomponents of the course in the same module.
-
-//Unless I'm mistaken, I believe the application is already organized like this
