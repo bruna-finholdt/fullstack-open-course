@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
-import axios from 'axios'
 import personService from './services/persons'
 
 const App = () => {
@@ -64,6 +63,21 @@ const App = () => {
     }
   };
 
+  const deletePerson = (id) => {
+    const clickedPerson = persons.find(person => person.id === id)
+    if (window.confirm(`Delete ${clickedPerson.name} ?`)) {
+      personService
+      .remove(id)
+      .then(() => {
+        const updatedPersons = persons.filter(person => person.id !== id)
+        setPersons(updatedPersons)
+      })
+      .catch(error => {
+        console.error('Erro ao excluir:', error);
+      });
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -77,7 +91,7 @@ const App = () => {
         numberOnChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons filteredPersons={filteredPersons} />
+      <Persons filteredPersons={filteredPersons} deletePerson={deletePerson}/>
     </div>
   );
 };

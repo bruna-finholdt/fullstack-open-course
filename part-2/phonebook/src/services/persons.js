@@ -11,6 +11,11 @@ const create = newObject => {
   return request.then(response => response.data)
 }
 
+const remove = id => {
+  const request = axios.delete(`${baseUrl}/${id}`);
+  return request.then(response => response.data);
+}
+
 // export default { 
 //   getAll: getAll, 
 //   create: create
@@ -18,7 +23,6 @@ const create = newObject => {
 
 export default { 
   getAll, 
-  create
+  create, 
+  remove
 }
-
-//exercise 2.13 done and commited in the previous exercise commit
