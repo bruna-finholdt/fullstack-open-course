@@ -11,7 +11,8 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [nameFilter, setNameFilter] = useState("");
-  const [message, setMessage] = useState("")
+  const [notifType, setNotifType] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     personService
@@ -47,7 +48,13 @@ const App = () => {
     .update(id, updatedPerson)
     .then(returnedPerson => {
       setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+      setNotifType("success")
       setMessage(`Updated ${person.name}'s number`)
+    })
+    .catch(error => {
+      setNotifType("error")
+      setMessage(`Information of ${person.name} has already been removed from server`)
+      setPersons(persons.filter(person => person.id !== id))
     })
   }
   }
@@ -57,7 +64,6 @@ const App = () => {
     const personObject = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
     };
 
     const existingPerson = persons.find(
@@ -74,6 +80,7 @@ const App = () => {
       console.log(returnedPerson)
       //setPersons(persons.concat(personObject));
       setPersons([...persons, returnedPerson]);
+      setNotifType("success")
       setMessage(`Added ${returnedPerson.name}`)
       setNewName("");
       setNewNumber("");
@@ -99,7 +106,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} setMessage={setMessage}/>
+      <Notification message={message} setMessage={setMessage} notifType={notifType} setNotifType={setNotifType}/>
       <Filter value={nameFilter} onChange={handleFilterChange} />
       <h2>add a new</h2>
       <PersonForm

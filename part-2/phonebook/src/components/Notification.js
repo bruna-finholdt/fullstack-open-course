@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const Notification = ({message, setMessage}) => {
+const Notification = ({message, setMessage, notifType, setNotifType}) => {
  
   useEffect(() => {
     if (message) {
@@ -17,7 +17,7 @@ const Notification = ({message, setMessage}) => {
   }
 
   return (
-    <div className='notif'>{message}</div>
+    <div className={notifType}>{message}</div>
   )
 }
 
