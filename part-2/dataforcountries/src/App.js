@@ -30,9 +30,9 @@ function App() {
         <div>
           find countries <input value={countryFilter} onChange={handleInputChange}/>
         </div>
+      </form>
         {/* using a similar approach to the 'if(countryFilter) {render this}' */}
         {countryFilter && <CountriesList countries={filteredCountries} />} 
-      </form>
     </div>
   );
 }
