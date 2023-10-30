@@ -21,14 +21,16 @@ const update = (id, newObject) => {
   return request.then(response => response.data)
 }
 
-// export default { 
-//   getAll: getAll, 
-//   create: create
-// }
-
-export default { 
+const object = { 
   getAll, 
   create, 
   remove,
   update
 }
+
+// export default { 
+//   getAll: getAll, 
+//   create: create
+// }
+
+export default object
