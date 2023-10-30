@@ -24,6 +24,7 @@ function App() {
 
   const handleInputChange = (event) => {
     setCountryFilter(event.target.value);
+    setSelectedCountry(null); 
   };
   
   return (
