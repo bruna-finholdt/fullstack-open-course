@@ -51,8 +51,6 @@ let persons = [
     response.status(204).end()
   })
 
-  //Exercise 3.5 already implemented: (below)
-
   const generateId = () => {
     const maxId = persons.length > 0
       ? Math.max(...persons.map(n => n.id))
@@ -63,9 +61,17 @@ let persons = [
   app.post('/api/persons', (request, response) => {
     const body = request.body
   
-    if (!body.name && !body.number) {
+    if (!body.name || !body.number) {
       return response.status(400).json({ 
-        error: 'name and number missing' 
+        error: 'name and number required' 
+      })
+    }
+
+    const nameExists = persons.find(person => person.name === body.name);
+
+    if (nameExists) {
+      return response.status(400).json({ 
+        error: 'name must be unique' 
       })
     }
   
