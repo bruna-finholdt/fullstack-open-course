@@ -34,8 +34,6 @@ let persons = [
     response.json(persons)
   })
 
-  //Exercise 3.3 already implemented: (below)
-
   app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
     const person = persons.find(person => person.id === id)
@@ -45,6 +43,8 @@ let persons = [
         response.status(404).end()
       }
   })
+
+    //Exercise 3.4 already implemented: (below)
 
   app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
