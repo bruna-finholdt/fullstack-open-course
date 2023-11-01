@@ -77,6 +77,13 @@ let persons = [
   
     response.json(person)
   })
+
+  app.get('/info', (request, response) => {
+    const info = `<p>Phonebook has info for ${persons.length} people</p>
+    <p>${new Date()}</p>
+    `
+    response.send(info)
+  })
   
   const PORT = 3001
   app.listen(PORT, () => {
