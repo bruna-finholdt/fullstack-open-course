@@ -44,14 +44,14 @@ let persons = [
       }
   })
 
-    //Exercise 3.4 already implemented: (below)
-
   app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
     persons = persons.filter(person => person.id !== id)
   
     response.status(204).end()
   })
+
+  //Exercise 3.5 already implemented: (below)
 
   const generateId = () => {
     const maxId = persons.length > 0
@@ -63,15 +63,15 @@ let persons = [
   app.post('/api/persons', (request, response) => {
     const body = request.body
   
-    if (!body.content) {
+    if (!body.name && !body.number) {
       return response.status(400).json({ 
-        error: 'content missing' 
+        error: 'name and number missing' 
       })
     }
   
     const person = {
-      content: body.content,
-      important: body.important || false,
+      name: body.name,
+      number: body.number,
       id: generateId(),
     }
   
