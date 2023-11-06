@@ -18,7 +18,7 @@ This is a simple Phonebook application that allows you to manage your contacts. 
 
 ## Roadmap features
 
-- Update contact information (not working yet)
+- Update contact information 
 
 ## Setup
 
