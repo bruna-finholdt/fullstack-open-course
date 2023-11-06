@@ -9,12 +9,15 @@ This is a simple Phonebook application that allows you to manage your contacts. 
 - Frontend: React
 - Backend: Express.js
 
-## Features
+## Current features
 
 - View a list of contacts
 - Add a new contact
 - Delete a contact
 - Filter and search for contacts
+
+## Roadmap features
+
 - Update contact information (not working yet)
 
 ## Setup
@@ -25,27 +28,29 @@ To run this application locally, follow these steps:
 
    [git clone](https://github.com/bruna-finholdt/fullstack-open-course)
 
-2. Change to the project directory:
-
-   cd part-3/phonebook
-
-3. Install dependencies:
-
-   npm install
-
-4. Start the frontend:
+2. Change to the frontend project directory and install dependencies:
 
    cd part-2/phonebook
 
+   npm install
+
+   Start the frontend:
+
    npm start
 
-5. Start the backend:
+3. Change to the backend project directory and install dependencies:
+
+   cd part-2/phonebook
+
+   npm install
+
+   Start the backend:
 
    cd part-3/phonebook
 
    npm run dev
 
-6. Access the application in your web browser:
+4. Access the application in your web browser:
 
    [http://localhost:3000](http://localhost:3000)
 
@@ -54,7 +59,6 @@ To run this application locally, follow these steps:
 - `GET /api/persons` - Get a list of all contacts
 - `GET /api/persons/:id` - Get a contact by ID
 - `POST /api/persons` - Create a new contact
-- `PUT /api/persons/:id` - Update a contact by ID (not working yet)
 - `DELETE /api/persons/:id` - Delete a contact by ID
 
 ## Deployment
