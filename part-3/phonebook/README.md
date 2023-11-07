@@ -9,14 +9,11 @@ This is a simple Phonebook application that allows you to manage your contacts. 
 - Frontend: React
 - Backend: Express.js
 
-## Current features
+## Features
 
 - View a list of contacts
 - Add a new contact
 - Filter and search for contacts
-
-## Roadmap features
-
 - Update contact information
 - Delete a contact
 
@@ -53,6 +50,8 @@ To run this application locally, follow these steps:
 - `GET /api/persons` - Get a list of all contacts
 - `GET /api/persons/:id` - Get a contact by ID
 - `POST /api/persons` - Create a new contact
+- `PUT /api/persons/:id` - Update a contact by ID (not working yet)
+- `DELETE /api/persons/:id` - Delete a contact by ID
 
 ## Deployment
 
