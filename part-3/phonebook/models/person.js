@@ -14,10 +14,10 @@ mongoose.connect(url)
     console.log('error connecting to MongoDB:', error.message);
   });
  
-  if (process.argv.length<3) {
-    console.log('give password as argument')
-    process.exit(1)
-  }  
+  // if (process.argv.length<3) {
+  //   console.log('give password as argument')
+  //   process.exit(1)
+  // }  
  
   const personSchema = new mongoose.Schema({
     name: String,
