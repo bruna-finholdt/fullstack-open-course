@@ -50,6 +50,8 @@ const App = () => {
         setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
         setNotifType("success")
         setMessage(`Updated ${person.name}'s number`)
+        setNewName("");
+        setNewNumber("");
       })
       .catch(error => {
         if (error.response) {
@@ -57,6 +59,8 @@ const App = () => {
           console.error(error);
           setNotifType("error");
           setMessage(error.response.data.error);
+          setNewName("");
+          setNewNumber("");
         } else {
           // Handles other types of errors (e.g., network errors)
           console.error(error);
@@ -98,6 +102,8 @@ const App = () => {
         console.error(error)
         setNotifType("error")
         setMessage(error.response.data.error)
+        setNewName("");
+        setNewNumber("");
       });
     }
   };
