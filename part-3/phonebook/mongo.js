@@ -32,7 +32,7 @@
 //     // If all necessary arguments are provided, add an entry
 //     const name = process.argv[3];
 //     const number = process.argv[4];
-  
+
 //     const newPerson = new Person({
 //       name,
 //       number,
