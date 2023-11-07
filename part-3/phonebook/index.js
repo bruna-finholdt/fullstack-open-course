@@ -72,13 +72,8 @@ app.use(express.json())
   //   return maxId + 1
   // }
  
-  app.post('/api/persons', (request, response) => {
+  app.post('/api/persons', (request, response, next) => {
     const body = request.body
- 
-    // Validates the body of the persons POST
-    if (!body.name || !body.number) {
-      return response.status(400).json({ error: 'name and number required' })
-    }
  
     const person = new Person({
       name: body.name,
@@ -88,18 +83,19 @@ app.use(express.json())
     person.save().then(savedPerson => {
       response.json(savedPerson)
     })
+    .catch(error => next(error))
   })
 
   // Edit Person
   app.put('/api/persons/:id', (request, response, next) => {
-    const body = request.body
+    const { name, number } = request.body
   
-    const person = {
-      name: body.name,
-      number: body.number,
-    } 
+    // const person = {
+    //   name: body.name,
+    //   number: body.number,
+    // } 
   
-    Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    Person.findByIdAndUpdate(request.params.id, { name, number }, { new: true, runValidators: true, context: 'query' })
       .then(updatedPerson => {
         response.json(updatedPerson)
       })
@@ -111,7 +107,9 @@ app.use(express.json())
   
     if (error.name === 'CastError') {
       return response.status(400).send({ error: 'malformatted id' })
-    } 
+    } else if (error.name === 'ValidationError') {
+      return response.status(400).json({ error: error.message }) 
+    }
   
     next(error)
   }

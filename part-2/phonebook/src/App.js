@@ -44,20 +44,29 @@ const App = () => {
     const person = persons.find(person => person.id === id)
     const updatedPerson = {...person, number: newNumber}
     if (window.confirm(`${person.name} is already added to phonebook, replace the old number with a new one?`)) {
-    personService
-    .update(id, updatedPerson)
-    .then(returnedPerson => {
-      setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
-      setNotifType("success")
-      setMessage(`Updated ${person.name}'s number`)
-    })
-    .catch(error => {
-      setNotifType("error")
-      setMessage(`Information of ${person.name} has already been removed from server`)
-      setPersons(persons.filter(person => person.id !== id))
-    })
+      personService
+      .update(id, updatedPerson)
+      .then(returnedPerson => {
+        setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+        setNotifType("success")
+        setMessage(`Updated ${person.name}'s number`)
+      })
+      .catch(error => {
+        if (error.response) {
+          // Handles errors with responses, like validation errors
+          console.error(error);
+          setNotifType("error");
+          setMessage(error.response.data.error);
+        } else {
+          // Handles other types of errors (e.g., network errors)
+          console.error(error);
+          setNotifType("error");
+          setMessage(`Information of ${person.name} has already been removed from the server`);
+          setPersons(persons.filter(p => p.id !== id));
+        }
+      });
   }
-  }
+};
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -77,14 +86,19 @@ const App = () => {
       personService
       .create(personObject)
       .then(returnedPerson => {
-      console.log(returnedPerson)
-      //setPersons(persons.concat(personObject));
-      setPersons([...persons, returnedPerson]);
-      setNotifType("success")
-      setMessage(`Added ${returnedPerson.name}`)
-      setNewName("");
-      setNewNumber("");
-    })
+        console.log(returnedPerson)
+        //setPersons(persons.concat(personObject));
+        setPersons([...persons, returnedPerson]);
+        setNotifType("success")
+        setMessage(`Added ${returnedPerson.name}`)
+        setNewName("");
+        setNewNumber("");
+      })
+      .catch(error => {
+        console.error(error)
+        setNotifType("error")
+        setMessage(error.response.data.error)
+      });
     }
   };
 
