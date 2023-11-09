@@ -24,18 +24,35 @@ const favoriteBlog = (blogPosts) => {
 
 const mostBlogs = (blogPosts) => {
   const blogsByAuthor = groupBy(blogPosts, 'author')
-  console.log('blogsByAuthor', blogsByAuthor)
+  //   console.log('blogsByAuthor', blogsByAuthor)
   //A função maxBy espera um array de objetos e um campo pelo qual deve encontrar o valor máximo. No entanto, você está passando blogsByAuthor, que é um objeto, não um array, para maxBy. É por isso que você está recebendo undefined. Para encontrar o autor com mais posts, você deve transformar o objeto blogsByAuthor em um array de objetos (um objeto para cada autor) antes de usar maxBy. Você pode fazer isso usando Object.entries para obter as entradas do objeto e, em seguida, mapear essas entradas para um formato que maxBy possa usar.
   const authorPostsArray = Object.entries(blogsByAuthor).map(([author, posts]) => ({ author, blogs: posts.length }))
-  console.log('authorPostsArray', authorPostsArray)
+  //   console.log('authorPostsArray', authorPostsArray)
   const authorWithMostPosts = maxBy(authorPostsArray, 'blogs')
-  console.log('authorWithMostPosts', authorWithMostPosts)
+  //   console.log('authorWithMostPosts', authorWithMostPosts)
   return authorWithMostPosts ? authorWithMostPosts : null
+}
+
+const mostLikes = (blogPosts) => {
+  const blogsByAuthor = groupBy(blogPosts, 'author')
+  //   console.log('blogsByAuthor', blogsByAuthor)
+  //A função maxBy espera um array de objetos e um campo pelo qual deve encontrar o valor máximo. No entanto, você está passando blogsByAuthor, que é um objeto, não um array, para maxBy. É por isso que você está recebendo undefined. Para encontrar o autor com mais posts, você deve transformar o objeto blogsByAuthor em um array de objetos (um objeto para cada autor) antes de usar maxBy. Você pode fazer isso usando Object.entries para obter as entradas do objeto e, em seguida, mapear essas entradas para um formato que maxBy possa usar.
+  const authorLikesArray = Object.entries(blogsByAuthor).map(([author, posts]) => {
+    // Using reduce to sum the likes of all posts from that author
+    const totalLikes = posts.reduce((totalLikes, post) => totalLikes + post.likes, 0)
+    return { author, likes: totalLikes }
+  })
+  //   console.log('authorLikesArray', authorLikesArray)
+  // Now I can use maxBy to find the author with the most likes
+  const authorWithMostLikes = maxBy(authorLikesArray, 'likes')
+  //   console.log('authorWithMostLikes', authorWithMostLikes)
+  return authorWithMostLikes ? authorWithMostLikes : null
 }
 
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }
