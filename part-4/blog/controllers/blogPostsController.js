@@ -2,13 +2,20 @@ const blogRouter = require('express').Router()
 const BlogPost = require('../models/blogPost')
 
 // Get all blog posts
-blogRouter.get('/', (request, response) => {
-  BlogPost.find({}).then(blogPosts => {
-    response.json(blogPosts)
-  })
+
+// blogRouter.get('/', (request, response) => {
+//   BlogPost.find({}).then(blogPosts => {
+//     response.json(blogPosts)
+//   })
+// })
+
+blogRouter.get('/', async (request, response) => {
+  const posts = await BlogPost.find({})
+  response.json(posts)
 })
 
-// blogRouter.get('/:id', (request, response, next) => {
+//Get post by Id
+blogRouter.get('/:id', async (request, response) => { //tiro o param next
 //   BlogPost.findById(request.params.id)
 //     .then(blogPost => {
 //       if (blogPost) {
@@ -18,10 +25,31 @@ blogRouter.get('/', (request, response) => {
 //       }
 //     })
 //     .catch(error => next(error))
-// })
+// }
+
+  //colocando try catch
+  // try {
+  //   const blogPost = await BlogPost.findById(request.params.id)
+  //   if (blogPost) {
+  //     response.json(blogPost)
+  //   } else {
+  //     response.status(404).end()
+  //   }
+  // } catch(exception) {
+  //   next(exception)
+  // }
+
+  //tirando try catch dps de instalar a lib express-async-errors
+  const blogPost = await BlogPost.findById(request.params.id)
+  if (blogPost) {
+    response.json(blogPost)
+  } else {
+    response.status(404).end()
+  }
+})
 
 // Create blog post
-blogRouter.post('/', (request, response, next) => {
+blogRouter.post('/', async (request, response) => { //tiro o param next
   const body = request.body
 
   const blogPost = new BlogPost({
@@ -31,20 +59,49 @@ blogRouter.post('/', (request, response, next) => {
     likes: body.likes
   })
 
-  blogPost.save()
-    .then(savedNote => {
-      response.json(savedNote)
-    })
-    .catch(error => next(error))
+  // blogPost.save()
+  //   .then(savedPost => {
+  //     response.status(201).json(savedPost)
+  //     response.json(savedPost)
+  //   })
+  //   .catch(error => next(error))
+
+  //colocando try catch
+
+  // try {
+  //   const savedPost = await blogPost.save()
+  //   response.status(201).json(savedPost)
+  // } catch(exception) {
+  //   next(exception)
+  // }
+
+  //tirando try catch dps de instalar a lib express-async-errors
+  const savedPost = await blogPost.save()
+  response.status(201).json(savedPost)
 })
 
-// blogRouter.delete('/:id', (request, response, next) => {
-//   BlogPost.findByIdAndRemove(request.params.id)
-//     .then(() => {
-//       response.status(204).end()
-//     })
-//     .catch(error => next(error))
-// })
+//Delete post
+blogRouter.delete('/:id', async (request, response) => { //tiro o param next
+  // BlogPost.findByIdAndRemove(request.params.id)
+  //   .then(() => {
+  //     response.status(204).end()
+  //   })
+  //   .catch(error => next(error))
+
+  //colocando try catch
+
+  // try {
+  //   await BlogPost.findByIdAndRemove(request.params.id)
+  //   response.status(204).end()
+  // } catch(exception) {
+  //   next(exception)
+  // }
+
+  //tirando try catch dps de instalar a lib express-async-errors
+  await BlogPost.findByIdAndRemove(request.params.id)
+  response.status(204).end()
+  //Because of the library, we do not need the next(exception) call anymore. The library handles everything under the hood. If an exception occurs in an async route, the execution is automatically passed to the error handling middleware.
+})
 
 // blogRouter.put('/:id', (request, response, next) => {
 //   const body = request.body
