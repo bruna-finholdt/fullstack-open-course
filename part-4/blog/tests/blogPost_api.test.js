@@ -47,178 +47,262 @@ const BlogPost = require('../models/blogPost')
 // })
 
 //or this:
+// beforeEach(async () => {
+//   await BlogPost.deleteMany({})
+
+//   for (let blogPost of helper.initialPosts) {
+//     let postObject = new BlogPost(blogPost)
+//     await postObject.save()
+//   }
+// })
+
+//Now, changed to this:
 beforeEach(async () => {
   await BlogPost.deleteMany({})
-
-  for (let blogPost of helper.initialPosts) {
-    let postObject = new BlogPost(blogPost)
-    await postObject.save()
-  }
+  await BlogPost.insertMany(helper.initialPosts)
 })
 
-//Our test makes an HTTP GET request to the api/blogPosts url and verifies that the request is responded to with the status code 200. The test also verifies that the Content-Type header is set to application/json, indicating that the data is in the desired format.
 
-test('blog posts are returned as json', async () => {
-  await api
-    .get('/api/blogPosts')
-    .expect(200)
-    .expect('Content-Type', /application\/json/) //The desired value is now defined as regular expression or in short regex. The regex starts and ends with a slash /, because the desired string application/json also contains the same slash, it is preceded by a \ so that it is not interpreted as a regex termination character.
 
-  //In principle, the test could also have been defined as a string
+describe('when there is initially some posts saved', () => {
+  //Our test makes an HTTP GET request to the api/blogPosts url and verifies that the request is responded to with the status code 200. The test also verifies that the Content-Type header is set to application/json, indicating that the data is in the desired format.
 
-  //.expect('Content-Type', 'application/json')
-  //The problem here, however, is that when using a string, the value of the header must be exactly the same. For the regex we defined, it is acceptable that the header contains the string in question. The actual value of the header is application/json; charset=utf-8, i.e. it also contains information about character encoding. However, our test is not interested in this and therefore it is better to define the test as a regex instead of an exact string.
-}, 100000) //3 param***
+  test('blog posts are returned as json', async () => {
+    await api
+      .get('/api/blogPosts')
+      .expect(200)
+      .expect('Content-Type', /application\/json/) //The desired value is now defined as regular expression or in short regex. The regex starts and ends with a slash /, because the desired string application/json also contains the same slash, it is preceded by a \ so that it is not interpreted as a regex termination character.
 
-//The test contains some details that we will explore a bit later on. The arrow function that defines the test is preceded by the async keyword and the method call for the api object is preceded by the await keyword. We will write a few tests and then take a closer look at this async/await magic.
+    //In principle, the test could also have been defined as a string
 
-// test('there are four posts', async () => {
-//   const response = await api.get('/api/blogPosts')
+    //.expect('Content-Type', 'application/json')
+    //The problem here, however, is that when using a string, the value of the header must be exactly the same. For the regex we defined, it is acceptable that the header contains the string in question. The actual value of the header is application/json; charset=utf-8, i.e. it also contains information about character encoding. However, our test is not interested in this and therefore it is better to define the test as a regex instead of an exact string.
+  }, 100000) //3 param***
 
-//   expect(response.body).toHaveLength(4)
-// })
+  //The test contains some details that we will explore a bit later on. The arrow function that defines the test is preceded by the async keyword and the method call for the api object is preceded by the await keyword. We will write a few tests and then take a closer look at this async/await magic.
 
-// test('the first post has the title Teste', async () => {
-//   const response = await api.get('/api/blogPosts')
+  // test('there are four posts', async () => {
+  //   const response = await api.get('/api/blogPosts')
 
-//   expect(response.body[0].title).toBe('Teste')
-// })
+  //   expect(response.body).toHaveLength(4)
+  // })
 
-//GET test
-test('the correct amount of blog posts is returned', async () => {
-  const response = await api.get('/api/blogPosts')
-  expect(response.body).toHaveLength(helper.initialPosts.length)
-})
+  // test('the first post has the title Teste', async () => {
+  //   const response = await api.get('/api/blogPosts')
 
-//unique identifier property of the blog posts is named id
-test('blog post has id property', async () => {
-  const response = await api.get('/api/blogPosts')
-  const blogPost = response.body[0]
+  //   expect(response.body[0].title).toBe('Teste')
+  // })
 
-  expect(blogPost.id).toBeDefined()
-})
+  //GET test
+  test('the correct amount of blog posts is returned', async () => {
+    const response = await api.get('/api/blogPosts')
+    expect(response.body).toHaveLength(helper.initialPosts.length)
+  })
 
-// test('a specific post title is within the returned posts', async () => {
-//   const response = await api.get('/api/blogPosts')
-//   const titles = response.body.map(r => r.title)
-//   expect(titles).toContain('Teste')
-// })
+  //unique identifier property of the blog posts is named id
+  test('blog post has id property', async () => {
+    const response = await api.get('/api/blogPosts')
+    const blogPost = response.body[0]
 
-//POST test
-test('a post can be successfully created', async () => {
-  const newBlogPost = {
-    title: 'Teste3',
-    author: 'teste3',
-    url: 'https://www.youtube.com/',
-    likes: 5,
-  }
+    expect(blogPost.id).toBeDefined()
+  })
 
-  await api
-    .post('/api/blogPosts')
-    .send(newBlogPost)
-    .expect(201)
-    .expect('Content-Type', /application\/json/)
+  // test('a specific post title is within the returned posts', async () => {
   //   const response = await api.get('/api/blogPosts')
   //   const titles = response.body.map(r => r.title)
-  //   console.log(titles)
-  //   console.log(initialPosts.length)
-  //   expect(response.body).toHaveLength(initialPosts.length + 1)
-  //   expect(titles).toContain('Teste3')
-  const postsAtEnd = await helper.postsInDb()
-  expect(postsAtEnd).toHaveLength(helper.initialPosts.length + 1)
-  const titles = postsAtEnd.map(n => n.title)
-  expect(titles).toContain('Teste3')
+  //   expect(titles).toContain('Teste')
+  // })
+
 })
 
-//field (likes) is set to zero as a default value if not filled
-test('missing likes property defaults to 0', async () => {
-  const newBlogPost = {
-    title: 'Teste4',
-    author: 'teste4',
-    url: 'https://www.youtube.com/',
-  }
+describe('viewing a specific post', () => {
 
-  await api
-    .post('/api/blogPosts')
-    .send(newBlogPost)
-    .expect(201)
-    .expect('Content-Type', /application\/json/)
-  const response = await api.get('/api/blogPosts')
-  const savedPost = response.body.find(blog => blog.title === 'Teste4')
+  //GET BY ID test
+  test('succeeds with a valid id', async () => {
+    const postsAtStart = await helper.postsInDb()
 
-  expect(savedPost.likes).toBeDefined()
-  expect(savedPost.likes).toBe(0)
+    const postToView = postsAtStart[0] //é pra pegar o primeiro post da lista
+
+    const resultPost = await api
+      .get(`/api/blogPosts/${postToView.id}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    expect(resultPost.body).toEqual(postToView)
+  })
+
+  test('fails with statuscode 404 if post does not exist', async () => {
+    const validNonexistingId = await helper.nonExistingId()
+
+    await api
+      .get(`/api/blogPosts/${validNonexistingId}`)
+      .expect(404)
+  })
+
+  test('fails with statuscode 400 if id is invalid', async () => {
+    const invalidId = '5a3d5da59070081a82a3445'
+
+    await api
+      .get(`/api/blogPosts/${invalidId}`)
+      .expect(400)
+  })
+
 })
 
-//field (title) is required error test
-test('post without title is not added', async () => {
-  const newBlogPost = {
-    author: 'teste5',
-    url: 'https://www.youtube.com/',
-    likes: 5,
-  }
+describe('addition of a new post', () => {
 
-  await api
-    .post('/api/blogPosts')
-    .send(newBlogPost)
-    .expect(400)
-  //   const response = await api.get('/api/blogPosts')
-  //   expect(response.body).toHaveLength(initialPosts.length)
-  const postsAtEnd = await helper.postsInDb()
-  expect(postsAtEnd).toHaveLength(helper.initialPosts.length)
-})
+  //POST test
+  test('succeeds with valid data', async () => {
 
-//field (url) is required error test
-test('post without url is not added', async () => {
-  const newBlogPost = {
-    title: 'Teste6',
-    author: 'teste6',
-    likes: 5,
-  }
+    const newBlogPost = {
+      title: 'Teste3',
+      author: 'teste3',
+      url: 'https://www.youtube.com/',
+      likes: 5,
+    }
 
-  await api
-    .post('/api/blogPosts')
-    .send(newBlogPost)
-    .expect(400)
+    await api
+      .post('/api/blogPosts')
+      .send(newBlogPost)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+    //   const response = await api.get('/api/blogPosts')
+    //   const titles = response.body.map(r => r.title)
+    //   console.log(titles)
+    //   console.log(initialPosts.length)
+    //   expect(response.body).toHaveLength(initialPosts.length + 1)
+    //   expect(titles).toContain('Teste3')
+    const postsAtEnd = await helper.postsInDb()
+    expect(postsAtEnd).toHaveLength(helper.initialPosts.length + 1)
+    const titles = postsAtEnd.map(n => n.title)
+    expect(titles).toContain('Teste3')
+  })
+
+  //field (likes) is set to zero as a default value if not filled
+  test('missing likes property defaults to 0', async () => {
+    const newBlogPost = {
+      title: 'Teste4',
+      author: 'teste4',
+      url: 'https://www.youtube.com/',
+    }
+
+    await api
+      .post('/api/blogPosts')
+      .send(newBlogPost)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+    const response = await api.get('/api/blogPosts')
+    const savedPost = response.body.find(blog => blog.title === 'Teste4')
+
+    expect(savedPost.likes).toBeDefined()
+    expect(savedPost.likes).toBe(0)
+  })
+
+  //field (title) is required error test
+  test('fails with status code 400 if title is missing', async () => {
+    const newBlogPost = {
+      author: 'teste5',
+      url: 'https://www.youtube.com/',
+      likes: 5,
+    }
+
+    await api
+      .post('/api/blogPosts')
+      .send(newBlogPost)
+      .expect(400)
     //   const response = await api.get('/api/blogPosts')
     //   expect(response.body).toHaveLength(initialPosts.length)
-  const postsAtEnd = await helper.postsInDb()
-  expect(postsAtEnd).toHaveLength(helper.initialPosts.length)
+    const postsAtEnd = await helper.postsInDb()
+    expect(postsAtEnd).toHaveLength(helper.initialPosts.length)
+  })
+
+  //field (url) is required error test
+  test('fails with status code 400 if url is missing', async () => {
+    const newBlogPost = {
+      title: 'Teste6',
+      author: 'teste6',
+      likes: 5,
+    }
+
+    await api
+      .post('/api/blogPosts')
+      .send(newBlogPost)
+      .expect(400)
+      //   const response = await api.get('/api/blogPosts')
+      //   expect(response.body).toHaveLength(initialPosts.length)
+    const postsAtEnd = await helper.postsInDb()
+    expect(postsAtEnd).toHaveLength(helper.initialPosts.length)
+  })
+
+  //field (author) is required error test
+  test('fails with status code 400 if author is missing', async () => {
+    const newBlogPost = {
+      title: 'Teste7',
+      url: 'https://www.youtube.com/',
+      likes: 5,
+    }
+
+    await api
+      .post('/api/blogPosts')
+      .send(newBlogPost)
+      .expect(400)
+    //   const response = await api.get('/api/blogPosts')
+    //   expect(response.body).toHaveLength(initialPosts.length)
+    const postsAtEnd = await helper.postsInDb()
+    expect(postsAtEnd).toHaveLength(helper.initialPosts.length)
+  })
+
 })
 
-// //GET BY ID test
-// test('a specific post can be viewed', async () => {
-//   const postsAtStart = await helper.postsInDb()
+describe('deletion of a post', () => {
+  //DELETE test
+  test('succeeds with status code 204 if id is valid', async () => {
+    const postsAtStart = await helper.postsInDb()
+    const postToDelete = postsAtStart[0] //é pra deletar o primeiro post da lista
 
-//   const postToView = postsAtStart[0] //é pra pegar o primeiro post da lista
+    await api
+      .delete(`/api/blogPosts/${postToDelete.id}`)
+      .expect(204)
 
-//   const resultPost = await api
-//     .get(`/api/blogPosts/${postToView.id}`)
-//     .expect(200)
-//     .expect('Content-Type', /application\/json/)
+    const postsAtEnd = await helper.postsInDb()
 
-//   expect(resultPost.body).toEqual(postToView)
-// })
+    expect(postsAtEnd).toHaveLength(
+      helper.initialPosts.length - 1
+    )
 
-// //DELETE test
-// test('a post can be deleted', async () => {
-//   const postsAtStart = await helper.postsInDb()
-//   const postToDelete = postsAtStart[0] //é pra deletar o primeiro post da lista
+    const titles = postsAtEnd.map(r => r.title)
 
-//   await api
-//     .delete(`/api/blogPosts/${postToDelete.id}`)
-//     .expect(204)
+    expect(titles).not.toContain(postToDelete.title)
+  })
+})
 
-//   const postsAtEnd = await helper.postsInDb()
+describe('update of a post', () => {
+  //UPDATE test
+  //The application mostly needs to update the number of likes for a blog post.
+  test('succeeds with a valid id', async () => {
+    const postsAtStart = await helper.postsInDb()
+    const postToUpdate = postsAtStart[0] //peguei o 1 post da lista p ser editado
+    console.log(postToUpdate.id)
 
-//   expect(postsAtEnd).toHaveLength(
-//     helper.initialPosts.length - 1
-//   )
+    const updatedPost = {
+      title: 'Teste',
+      author: 'teste',
+      url: 'https://www.youtube.com/',
+      likes: 20 //updated from 10 to 20
+    }
 
-//   const titles = postsAtEnd.map(r => r.title)
+    await api
+      .put(`/api/blogPosts/${postToUpdate.id}`)
+      .send(updatedPost)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
 
-//   expect(titles).not.toContain(postToDelete.title)
-// })
+    const postsAtEnd = await helper.postsInDb()
+    const updatedPostInDb = postsAtEnd.find((post) => post.id === postToUpdate.id)
+    expect(updatedPostInDb.likes).toBe(updatedPost.likes)
+    console.log(updatedPostInDb)
+  })
+})
 
 //Once all the tests (there is currently only one) have finished running we have to close the database connection used by Mongoose. This can be easily achieved with the afterAll method:
 

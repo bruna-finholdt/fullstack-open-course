@@ -103,21 +103,23 @@ blogRouter.delete('/:id', async (request, response) => { //tiro o param next
   //Because of the library, we do not need the next(exception) call anymore. The library handles everything under the hood. If an exception occurs in an async route, the execution is automatically passed to the error handling middleware.
 })
 
-// blogRouter.put('/:id', (request, response, next) => {
-//   const body = request.body
+blogRouter.put('/:id', async (request, response) => {
+  const body = request.body
 
-//   const blogPost = {
-//     title: body.title,
-//     author: body.author,
-//     url: body.url,
-//     likes: body.likes
-//   }
+  const blogPost = {
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    likes: body.likes
+  }
+  // BlogPost.findByIdAndUpdate(request.params.id, blogPost, { new: true })
+  //   .then(updatedNote => {
+  //     response.json(updatedNote)
+  //   })
+  //   .catch(error => next(error))
 
-//   BlogPost.findByIdAndUpdate(request.params.id, blogPost, { new: true })
-//     .then(updatedNote => {
-//       response.json(updatedNote)
-//     })
-//     .catch(error => next(error))
-// })
+  const updatedPost = await BlogPost.findByIdAndUpdate(request.params.id, blogPost, { new: true })
+  response.status(200).json(updatedPost)
+})
 
 module.exports = blogRouter

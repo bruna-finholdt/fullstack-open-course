@@ -16,7 +16,9 @@ const initialPosts = [
 ]
 
 const nonExistingId = async () => {
-  const post = new BlogPost({ title: 'willremovethissoon' })
+  const post = new BlogPost({ title: 'Teste', author: 'teste',
+    url: 'https://www.youtube.com/',
+    likes: 5 })
   await post.save()
   await post.deleteOne()
 
