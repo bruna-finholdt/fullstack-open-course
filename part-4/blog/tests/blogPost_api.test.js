@@ -62,8 +62,6 @@ beforeEach(async () => {
   await BlogPost.insertMany(helper.initialPosts)
 })
 
-
-
 describe('when there is initially some posts saved', () => {
   //Our test makes an HTTP GET request to the api/blogPosts url and verifies that the request is responded to with the status code 200. The test also verifies that the Content-Type header is set to application/json, indicating that the data is in the desired format.
 
