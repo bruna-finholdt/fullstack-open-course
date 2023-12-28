@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Notification from './components/Notification'
+import './index.css'
 
 
 const App = () => {
@@ -14,6 +16,8 @@ const App = () => {
     author: '',
     url: '',
   })
+  const [message, setMessage] = useState("");
+  const [notifType, setNotifType] = useState("");
 
   useEffect(() => {
     const getBlogPosts = async () => {
@@ -48,11 +52,12 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-    } catch (exception) {
-      setErrorMessage('Wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+    } catch (error) {
+      // console.error(error);
+      setNotifType('error')
+      setMessage(error.response.data.error)
+      setUsername('')
+      setPassword('')
     }
   }
 
@@ -69,11 +74,17 @@ const App = () => {
         author: '',
         url: '',
       })
-    } catch (exception) {
-      setErrorMessage('Teste')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      setNotifType('success')
+      setMessage(`a new blog post ${blogPost.title} by ${blogPost.author} added`)
+    } catch (error) {
+      // console.error(error);
+      setNotifType('error')
+      setMessage(error.response.data.error)
+      setBlogPost({
+        title: '',
+        author: '',
+        url: '',
+      })
     }
   }
 
@@ -144,6 +155,7 @@ const App = () => {
     return (
       <div>
         <h2>Log in to application</h2>
+        <Notification message={message} setMessage={setMessage} notifType={notifType} setNotifType={setNotifType}/>
         {loginForm()}
       </div>
     )
@@ -152,6 +164,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+      <Notification message={message} setMessage={setMessage} notifType={notifType} setNotifType={setNotifType}/>
       <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p> 
       <h2>create new</h2>
       {newblogPostForm()}
