@@ -81,6 +81,30 @@ const App = () => {
     }
   };
 
+  const handleUpdateBlogPost = async (blogPost) => {
+      const updatedLikes = {
+        ...blogPost,
+        likes: blogPost.likes + 1
+      }
+      try {
+        await blogService.update(blogPost.id, updatedLikes)
+        const updatedBlogs = await blogService.getAll();
+        setBlogs(updatedBlogs);
+        setNotifType('success');
+        setMessage(`The blog post was successfully updated`);
+      } catch (error) {
+        console.error('Error creating a new blog post:', error);
+    
+        if (error.response && error.response.data) {
+          setNotifType('error');
+          setMessage(error.response.data.error || 'An error occurred while creating a new blog post.');
+        } else {
+          setNotifType('error');
+          setMessage('An unexpected error occurred while creating a new blog post.');
+        }
+      }
+    }
+
   const handleUsernameChange = (e) => {
     setUsername(e.target.value)
   }
@@ -114,7 +138,7 @@ const App = () => {
       <BlogPostForm handleNewBlogPost={handleNewBlogPost} />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} handleUpdateBlogPost={handleUpdateBlogPost}/>
       )}
     </div>
   )
