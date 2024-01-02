@@ -8,9 +8,9 @@ const setToken = newToken => {
 }
 
 const getAll = async () => {
-  const response = await axios.get(baseUrl);
+  const response = await axios.get(baseUrl)
 
-  const blogs =  response.data;
+  const blogs =  response.data
   if (blogs && blogs.length > 0) {
     const sortedBlogs = blogs.sort((a, b) => {
       if (a.likes > b.likes) return -1

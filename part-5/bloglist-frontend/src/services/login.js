@@ -7,7 +7,7 @@ const login = async credentials => {
 }
 
 const logout = () => {
-    window.localStorage.clear();
-  };
+  window.localStorage.clear()
+}
 
 export default { login, logout }

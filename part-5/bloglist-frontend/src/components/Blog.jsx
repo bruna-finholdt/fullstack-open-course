@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
 const Blog = ({ blog, handleUpdateBlogPost, handleDeleteBlogPost, currentUser }) => {
-  const { author, title, url, likes, user } = blog;
-  const [visibleDetails, setVisibleDetails] = useState(false);
+  const { author, title, url, likes, user } = blog
+  const [visibleDetails, setVisibleDetails] = useState(false)
   const toggleDetails = () => {
-    setVisibleDetails(!visibleDetails);
-  };
+    setVisibleDetails(!visibleDetails)
+  }
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -15,14 +15,14 @@ const Blog = ({ blog, handleUpdateBlogPost, handleDeleteBlogPost, currentUser })
   }
 
   const confirmDelete = () => {
-    const result = window.confirm(`Remove blog ${title} by ${author}`);
+    const result = window.confirm(`Remove blog ${title} by ${author}`)
 
     if (result) {
       // If the user clicks OK in the confirmation dialog, proceed with the deletion
-      handleDeleteBlogPost(blog.id);
+      handleDeleteBlogPost(blog.id)
     }
   }
-  
+
   return (
     <div style={blogStyle}>
       <span>{title}</span>
@@ -44,7 +44,7 @@ const Blog = ({ blog, handleUpdateBlogPost, handleDeleteBlogPost, currentUser })
           )}
         </div>
       )}
-    </div> 
-)}
+    </div>
+  )}
 
 export default Blog
