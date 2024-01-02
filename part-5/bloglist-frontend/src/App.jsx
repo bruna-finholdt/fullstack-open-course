@@ -110,7 +110,7 @@ const App = () => {
       <h2>blogs</h2>
       <Notification message={message} setMessage={setMessage} notifType={notifType} setNotifType={setNotifType}/>
       <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p> 
-      <Togglable buttonLabel="new note" ref={blogPostFormRef}>
+      <Togglable buttonLabel="create new blog" ref={blogPostFormRef}>
       <BlogPostForm handleNewBlogPost={handleNewBlogPost} />
       </Togglable>
       {blogs.map(blog =>
