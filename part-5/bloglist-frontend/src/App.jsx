@@ -93,7 +93,7 @@ const App = () => {
         setNotifType('success');
         setMessage(`The blog post was successfully updated`);
       } catch (error) {
-        console.error('Error creating a new blog post:', error);
+        console.error('Error updating a blog post:', error);
     
         if (error.response && error.response.data) {
           setNotifType('error');
@@ -103,7 +103,27 @@ const App = () => {
           setMessage('An unexpected error occurred while creating a new blog post.');
         }
       }
+  }
+
+  const handleDeleteBlogPost = async (id) => {
+    try {
+      await blogService.remove(id);
+      const updatedBlogs = await blogService.getAll();
+        setBlogs(updatedBlogs);
+        setNotifType('success');
+        setMessage(`The blog post was successfully deleted`);
+    } catch (error) {
+      console.error('Error deleting a blog post:', error);
+  
+      if (error.response && error.response.data) {
+        setNotifType('error');
+        setMessage(error.response.data.error || 'An error occurred while creating a new blog post.');
+      } else {
+        setNotifType('error');
+        setMessage('An unexpected error occurred while creating a new blog post.');
+      }
     }
+  }
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value)
@@ -138,7 +158,7 @@ const App = () => {
       <BlogPostForm handleNewBlogPost={handleNewBlogPost} />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} handleUpdateBlogPost={handleUpdateBlogPost}/>
+        <Blog key={blog.id} blog={blog} handleUpdateBlogPost={handleUpdateBlogPost} handleDeleteBlogPost={handleDeleteBlogPost} currentUser ={user}/>
       )}
     </div>
   )
