@@ -21,7 +21,6 @@ const BlogPostForm = ({ handleNewBlogPost }) => {
   const handleSubmit = (e) => {
     e.preventDefault()
     handleNewBlogPost(blogPost)
-    // Optionally, you can reset the form after submission
     setBlogPost({
       title: '',
       author: '',
@@ -40,6 +39,7 @@ const BlogPostForm = ({ handleNewBlogPost }) => {
             value={blogPost.title}
             name="Title"
             onChange={handleTitleChange}
+            placeholder="title"
           />
         </div>
         <div>
@@ -49,6 +49,7 @@ const BlogPostForm = ({ handleNewBlogPost }) => {
             value={blogPost.author}
             name="Author"
             onChange={handleAuthorChange}
+            placeholder="author"
           />
         </div>
         <div>
@@ -58,6 +59,7 @@ const BlogPostForm = ({ handleNewBlogPost }) => {
             value={blogPost.url}
             name="Url"
             onChange={handleUrlChange}
+            placeholder="url"
           />
         </div>
         <button type="submit">create</button>

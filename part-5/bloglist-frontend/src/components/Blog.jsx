@@ -24,19 +24,20 @@ const Blog = ({ blog, handleUpdateBlogPost, handleDeleteBlogPost, currentUser })
   }
 
   return (
-    <div style={blogStyle}>
-      <span>{title}</span>
-      <span>
+    <div style={blogStyle} className='blog'>
+      <div>{`title: ${title}`}
         <button onClick={toggleDetails}>
           {visibleDetails ? 'hide' : 'view'}
         </button>
-      </span>
+      </div>
+
+      <div>{`author: ${author}`}</div>
+
       {visibleDetails && (
         <div>
-          <div>{url}</div>
+          <div>{`url: ${url}`}</div>
           <span>{`likes ${likes}`}</span> <span><button onClick={() => handleUpdateBlogPost(blog)}>like</button></span>
-          <div>{author}</div>
-          <div>{user?.name || 'Unknown'}</div>
+          <div>{`user: ${user?.name || 'Unknown'}`}</div>
           {user && user.name === currentUser.name && (
             <button onClick={confirmDelete} style={{ backgroundColor: '#1b67e0' }}>
               remove
