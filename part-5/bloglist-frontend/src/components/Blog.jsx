@@ -36,7 +36,7 @@ const Blog = ({ blog, handleUpdateBlogPost, handleDeleteBlogPost, currentUser })
       {visibleDetails && (
         <div>
           <div>{`url: ${url}`}</div>
-          <span>{`likes ${likes}`}</span> <span><button onClick={() => handleUpdateBlogPost(blog)}>like</button></span>
+          <span>{`likes ${likes}`}</span> <span><button className='like-button' onClick={() => handleUpdateBlogPost(blog)}>like</button></span>
           <div>{`user: ${user?.name || 'Unknown'}`}</div>
           {user && user.name === currentUser.name && (
             <button onClick={confirmDelete} style={{ backgroundColor: '#1b67e0' }}>

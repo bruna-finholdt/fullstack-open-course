@@ -1,11 +1,12 @@
 import React from 'react'
 import '@testing-library/jest-dom'
-import { fireEvent, render } from '@testing-library/react'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import Blog from './Blog'
 
 describe('blog component', () => {
 
   let component
+  const handleUpdateBlogPost = jest.fn()
   const blog = {
     author: 'Author',
     title: 'Title',
@@ -14,7 +15,7 @@ describe('blog component', () => {
   }
 
   beforeEach(() => {
-    component = render(<Blog blog={blog} />)
+    component = render(<Blog blog={blog} handleUpdateBlogPost={handleUpdateBlogPost}/>)
   })
 
   test('renders the blog\'s title and author, but does not render its URL or number of likes by default', () => {
@@ -32,5 +33,20 @@ describe('blog component', () => {
     expect(component.container).toHaveTextContent('10')
     expect(component.container).toHaveTextContent('www.test.com')
   })
+
+  test('if the like button is clicked twice, the function handleUpdateBlogPost is called twice', async () => {
+    const toggleButton = component.getByText('view')
+    fireEvent.click(toggleButton)
+
+    // Aguarda até que o botão 'like' esteja presente no DOM
+    await waitFor(() => component.getByText('like'))
+
+    const likeButton = component.getByText('like')
+    fireEvent.click(likeButton)
+    fireEvent.click(likeButton)
+
+    expect(handleUpdateBlogPost.mock.calls).toHaveLength(2)
+  })
+
 })
 
