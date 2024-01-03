@@ -26,7 +26,7 @@ const Blog = ({ blog, handleUpdateBlogPost, handleDeleteBlogPost, currentUser })
   return (
     <div style={blogStyle} className='blog'>
       <div>{`title: ${title}`}
-        <button onClick={toggleDetails}>
+        <button onClick={toggleDetails} className='view-button'>
           {visibleDetails ? 'hide' : 'view'}
         </button>
       </div>

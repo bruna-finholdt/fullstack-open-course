@@ -1,6 +1,6 @@
 import React from 'react'
 import '@testing-library/jest-dom'
-import { render } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import Blog from './Blog'
 
 describe('blog component', () => {
@@ -23,6 +23,14 @@ describe('blog component', () => {
     expect(component.container).toHaveTextContent('Author')
     expect(component.container).not.toHaveTextContent('10')
     expect(component.container).not.toHaveTextContent('www.test.com')
+  })
+
+  test('after clicking the view button, URL and number of likes are shown', async () => {
+    const toggleButton = component.getByText('view')
+    fireEvent.click(toggleButton)
+
+    expect(component.container).toHaveTextContent('10')
+    expect(component.container).toHaveTextContent('www.test.com')
   })
 })
 
