@@ -74,9 +74,46 @@ describe('Blog app', () => {
       cy.contains('another blog post')
     })
 
+
+    it('blogs are ordered by likes', function() {
+      cy.contains('create new blog').click()
+      cy.handleNewBlogPost({
+        title: 'blog post with most likes',
+        author: 'author 1',
+        url: 'www.mostlikes.com'
+      })
+      cy.contains('blog post with most likes')
+
+      cy.contains('create new blog').click()
+      cy.handleNewBlogPost({
+        title: 'blog post with fewer likes',
+        author: 'author 2',
+        url: 'www.fewerlikes.com'
+      })
+
+      cy.contains('blog post with fewer likes')
+
+      cy.visit('')
+
+      cy.contains('blog post with most likes').contains('view').click()
+      cy.get('.like-button').click()
+      cy.get('.like-button').click()
+      cy.get('.like-button').click()
+      cy.contains('hide').click()
+
+
+      cy.contains('blog post with fewer likes').contains('view').click()
+      cy.get('.like-button').click()
+
+      cy.contains('hide').click()
+
+      cy.get('.blog').eq(0).should('contain', 'blog post with most likes')
+      cy.get('.blog').eq(1).should('contain', 'blog post with fewer likes')
+    })
+
+
     describe('and several blog posts exist', function () {
       beforeEach(function () {
-        // cy.login({ username: 'dart', password: 'bla123' })
         cy.handleNewBlogPost({
           title: 'first blog post',
           author: 'first author',
@@ -112,7 +149,7 @@ describe('Blog app', () => {
         cy.contains('title: second blog post').should('not.exist')
       })
 
-      it('duser who did not create a blog can\'t delete it, because user cant see remove button', function () {
+      it('user who did not create a blog can\'t delete it, because user cant see remove button', function () {
         const user = {
           name: 'Bruna',
           username: 'bruna',
@@ -126,6 +163,10 @@ describe('Blog app', () => {
           .click()
         cy.contains('.delete-button').should('not.exist')
       })
+
+
+
+
     })
 
 
