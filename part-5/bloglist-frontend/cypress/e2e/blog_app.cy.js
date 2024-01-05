@@ -73,6 +73,62 @@ describe('Blog app', () => {
 
       cy.contains('another blog post')
     })
+
+    describe('and several blog posts exist', function () {
+      beforeEach(function () {
+        // cy.login({ username: 'dart', password: 'bla123' })
+        cy.handleNewBlogPost({
+          title: 'first blog post',
+          author: 'first author',
+          url: 'www.firsturl.com'
+        })
+        cy.handleNewBlogPost({
+          title: 'second blog post',
+          author: 'second author',
+          url: 'www.secondurl.com'
+        })
+        cy.handleNewBlogPost({
+          title: 'third blog post',
+          author: 'third author',
+          url: 'www.thirdurl.com'
+        })
+      })
+
+      it('users can like a blog post', function () {
+        cy.contains('second blog post')
+          .contains('view')
+          .click()
+        cy.contains('likes 0').parent().find('.like-button').as('likeButton')
+        cy.get('@likeButton').click()
+        cy.contains('likes 1')
+      })
+
+      it('the user who created a blog post can delete it', function () {
+        cy.contains('second blog post')
+          .contains('view')
+          .click()
+        cy.contains('title: second blog post').parent().find('.delete-button').as('deleteButton')
+        cy.get('@deleteButton').click()
+        cy.contains('title: second blog post').should('not.exist')
+      })
+
+      it('duser who did not create a blog can\'t delete it, because user cant see remove button', function () {
+        const user = {
+          name: 'Bruna',
+          username: 'bruna',
+          password: 'bla123'
+        }
+        cy.request('POST', `${Cypress.env('BACKEND')}/users`, user)
+        cy.visit('')
+        cy.login({ username: 'bruna', password: 'bla123' })
+        cy.contains('second blog post')
+          .contains('view')
+          .click()
+        cy.contains('.delete-button').should('not.exist')
+      })
+    })
+
+
   })
 
 
