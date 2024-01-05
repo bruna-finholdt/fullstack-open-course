@@ -1,19 +1,19 @@
-import { useEffect } from "react";
+import { useEffect } from 'react'
 
-const Notification = ({message, setMessage, notifType, setNotifType}) => {
- 
+const Notification = ({ message, setMessage, notifType, setNotifType }) => {
+
   useEffect(() => {
     if (message) {
       const timer = setTimeout(() => {
-        setMessage(null);
-      }, 2000);
+        setMessage(null)
+      }, 2000)
 
-      return () => clearTimeout(timer);
+      return () => clearTimeout(timer)
     }
-  }, [message, setMessage]);
+  }, [message, setMessage])
 
   if (!message) {
-    return null;
+    return null
   }
 
   return (
